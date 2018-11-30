@@ -5,7 +5,17 @@ class Kick
     end
 
     def perform(event)
-      slack.chat_postMessage(channel: event[:channel], as_user: true, text: 'даю пендель') if need_perform?(event[:text])
+      message = event[:text]
+      slack.chat_postMessage(channel: event[:channel], as_user: true, text: pendel(message)) if need_perform?(message)
+    end
+
+    def users(message)
+      message.scan(/<\@[^>]*>/)
+    end
+
+    def pendel(message)
+      users = users(message)
+      'даю пендель ' + users.join(', ')
     end
   end
 end
