@@ -23,6 +23,7 @@ post '/messages' do
   when 'message'
     slack = Slack::Web::Client.new
     slack.chat_postMessage(channel: params[:channel], as_user: true, text: params[:text])
+    200
   end
 end
 
