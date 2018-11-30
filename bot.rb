@@ -3,6 +3,8 @@ require 'sinatra'
 require 'slack-ruby-client'
 # require 'pry'
 
+require './lib/kick.rb'
+
 Slack.configure do |config|
   config.token = ENV['SLACK_TOKEN']
 end
@@ -21,8 +23,7 @@ post '/messages' do
     data = params.slice(:challenge)
     data.to_json
   when 'message'
-    slack = Slack::Web::Client.new
-    slack.chat_postMessage(channel: params[:channel], as_user: true, text: params[:text])
+    Kick.perform(params[:text], params[:channel])
     200
   end
 end
@@ -36,4 +37,8 @@ private
 
 def parse_json(body)
   JSON.parse(body, symbolize_names: true)
+end
+
+def slack
+  @slack ||= Slack::Web::Client.new
 end
