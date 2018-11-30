@@ -5,6 +5,7 @@ require 'slack-ruby-client'
 require 'pry'
 
 require './lib/kick.rb'
+require './lib/rpc.rb'
 
 Slack.configure do |config|
   config.token = ENV['SLACK_TOKEN']
@@ -26,7 +27,8 @@ post '/messages' do
     data = params.slice(:challenge)
     data.to_json
   when 'event_callback'
-    Kick.perform channel(params), message(params)
+    Kick.perform channel(params), message(params), users(params)
+    Rpc.perform channel(params), message(params), users(params)
     200
   end
 end
@@ -68,4 +70,12 @@ def message(params)
   when 'message_changed'
     event[:message][:text]
   end
+end
+
+def users(params)
+  message(params).scan(/<\@([^>]*)>/)
+end
+
+def wrap(user)
+  "<@#{user}>"
 end
