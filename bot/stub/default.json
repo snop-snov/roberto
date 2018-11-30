@@ -1,0 +1,51 @@
+{
+   "Middle_Name_field" : "O",
+   "DOB_field" : "1970/01/25",
+   "SDOB_field" : "1971/04/01",
+   "NONUSSTAT_field" : "Ontario",
+   "Last_Name_field" : "Pascal",
+   "NONUSADDR_field" : "25 Bryanstone Hall",
+   "OCCUPATION_field" : "programmer",
+   "NONUSZIP_field" : "002233",
+   "children" : {
+      "2" : {
+         "Child_Last_Name_field" : "Test2",
+         "DEPEND_field" : "son",
+         "TEMPEXP_field" : "2000.",
+         "CHSSN_field" : "112-111-1111",
+         "CHDOB_field" : "2001/03/21",
+         "Child_First_Name_field" : "Robert"
+      },
+      "1" : {
+         "Child_First_Name_field" : "Ernest",
+         "TEMPEXP_field" : "1000.",
+         "CHSSN_field" : "112-111-1111",
+         "CHDOB_field" : "1993/01/31",
+         "Child_Last_Name_field" : "Test1",
+         "DEPEND_field" : "son"
+      },
+      "3" : {
+         "DEPEND_field" : "son",
+         "Child_Last_Name_field" : "Test3",
+         "CHSSN_field" : "112-111-1111",
+         "TEMPEXP_field" : "1000.",
+         "Child_First_Name_field" : "Hans",
+         "CHDOB_field" : "1999/07/23"
+      }
+   },
+   "USAPT_field" : "4",
+   "SMN_field" : "T",
+   "USSTAT_field" : "AL",
+   "NONUSAPT_field" : "8",
+   "SSSN_field" : "221-222-2222",
+   "SSN_field" : "112-111-1111",
+   "SFN_field" : "Johann",
+   "COUNTRY_field" : "UK",
+   "NONUSCITY_field" : "Praga",
+   "USADDR_field" : "Kozatska str.",
+   "SLN_field" : "Kernigan",
+   "USCITY_field" : "Drohobych",
+   "First_Name_field" : "Blez",
+   "SOCC_field" : "FOP",
+   "USZIP_field" : "10100"
+}

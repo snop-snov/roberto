@@ -1,0 +1,14 @@
+version: '3.5'
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: bot/Dockerfile
+      args:
+        APP_ENV: 'production'
+    ports:
+      - 8084:8084
+    environment:
+      APP_ENV: 'production'
+    command: rackup -o '0.0.0.0' -p 8084
