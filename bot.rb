@@ -1,7 +1,8 @@
-# bot.rb
+# frozen_string_literal: true
+
 require 'sinatra'
 require 'slack-ruby-client'
-# require 'pry'
+require 'pry'
 
 require './lib/kick.rb'
 
@@ -18,6 +19,8 @@ end
 post '/messages' do
   content_type :json
   params = parse_json(request.body.read)
+  logger.info(params_info(params))
+
   case params[:type]
   when 'url_verification'
     data = params.slice(:challenge)
@@ -37,6 +40,10 @@ private
 
 def parse_json(body)
   JSON.parse(body, symbolize_names: true)
+end
+
+def params_info(params)
+  format('Request params: %<params>s', params: params)
 end
 
 def slack
