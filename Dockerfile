@@ -11,4 +11,4 @@ RUN bundle install --jobs 3
 RUN gem regenerate_binstubs
 
 EXPOSE 80
-CMD rackup -o '0.0.0.0' -p 80
+CMD rackup -o '0.0.0.0' -p $PORT
