@@ -1,6 +1,11 @@
 # bot.rb
 require 'sinatra'
+require 'slack-ruby-client'
 # require 'pry'
+
+Slack.configure do |config|
+  config.token = ENV['SLACK_TOKEN']
+end
 
 get '/' do
   data = { message: 'Hello!' }
@@ -8,11 +13,17 @@ get '/' do
   data.to_json
 end
 
-post '/url_verification' do
+post '/messages' do
   content_type :json
-  json = parse_json(request.body.read)
-  data = json.slice(:challenge)
-  data.to_json
+  params = parse_json(request.body.read)
+  case params[:type]
+  when 'url_verification'
+    data = params.slice(:challenge)
+    data.to_json
+  when 'message'
+    slack = Slack::Web::Client.new
+    slack.chat_postMessage(channel: params[:channel], as_user: true, text: params[:text])
+  end
 end
 
 error JSON::ParserError do
