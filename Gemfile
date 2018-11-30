@@ -2,10 +2,11 @@ ruby '>= 2.5.0'
 
 source 'https://rubygems.org'
 
-gem 'sinatra'
 gem 'haml'
+gem 'sinatra'
+gem 'slack-ruby-client'
 
 group :development do
-  gem 'shotgun'
   gem 'pry-byebug'
+  gem 'shotgun'
 end
