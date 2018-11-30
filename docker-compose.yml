@@ -6,11 +6,11 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8084:8084
+      - 80:80
     volumes: &volumes
       - .:/app:cached
       - ~/.bash_history:/root/.bash_history
-    command: shotgun -o '0.0.0.0' -p 8084
+    command: shotgun -o '0.0.0.0' -p 80
 
     stdin_open: true
     tty: true

@@ -10,5 +10,5 @@ WORKDIR /app
 RUN bundle install --jobs 3
 RUN gem regenerate_binstubs
 
-EXPOSE 8084
-CMD rackup -o '0.0.0.0' -p 8084
+EXPOSE 80
+CMD rackup -o '0.0.0.0' -p 80
