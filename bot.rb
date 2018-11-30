@@ -25,8 +25,8 @@ post '/messages' do
   when 'url_verification'
     data = params.slice(:challenge)
     data.to_json
-  when 'message'
-    Kick.perform(params[:text], params[:channel])
+  when 'event_callback'
+    Kick.perform(params[:event])
     200
   end
 end
