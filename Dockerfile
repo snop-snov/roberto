@@ -5,7 +5,7 @@ RUN gem install bundler rubygems-bundler
 RUN mkdir -p /app
 ADD . /app
 
-WORKDIR /app/bot
+WORKDIR /app
 
 RUN bundle install --jobs 3
 RUN gem regenerate_binstubs
