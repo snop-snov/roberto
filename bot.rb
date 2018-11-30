@@ -73,7 +73,7 @@ def message(params)
 end
 
 def users(params)
-  message(params).scan(/<\@([^>]*)>/)
+  message(params).scan(/<\@([^>]*)>/).flatten
 end
 
 def wrap(user)

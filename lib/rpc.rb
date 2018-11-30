@@ -3,7 +3,6 @@ class Rpc
 
   class << self
     def perform(channel, message, users)
-      binding.pry
       start_game(channel, users) if need_start_game?(message)
     end
 
@@ -21,8 +20,8 @@ class Rpc
     end
 
     def ask_move(user)
-      data = slack.im_opem(user)
-      slack.chat_postMessage(channel: data['channel']['id'], as_user: true, text: 'ход за тобой, червь: камень ножницы бумага')
+      data = slack.im_open(user: user)
+      slack.chat_postMessage(channel: data['channel']['id'], as_user: true, text: 'ход за тобой, червь: камень ножницы бумага?')
     end
 
     def wait_for_response
