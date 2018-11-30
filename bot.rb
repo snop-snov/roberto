@@ -43,7 +43,7 @@ def parse_json(body)
 end
 
 def params_info(params)
-  format('Request params: %<params>s', params: params)
+  format("Request params: \n%<params>s", params: JSON.pretty_generate(params))
 end
 
 def slack
