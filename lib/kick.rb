@@ -4,9 +4,8 @@ class Kick
       message.include?('пинок')
     end
 
-    def perform(event)
-      message = event[:text]
-      slack.chat_postMessage(channel: event[:channel], as_user: true, text: pendel(message)) if need_perform?(message)
+    def perform(channel, message)
+      slack.chat_postMessage(channel: channel, as_user: true, text: pendel(message)) if need_perform?(message)
     end
 
     def users(message)

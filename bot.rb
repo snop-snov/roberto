@@ -26,7 +26,7 @@ post '/messages' do
     data = params.slice(:challenge)
     data.to_json
   when 'event_callback'
-    Kick.perform(params[:event])
+    Kick.perform channel(params), message(params)
     200
   end
 end
@@ -48,4 +48,24 @@ end
 
 def slack
   @slack ||= Slack::Web::Client.new
+end
+
+def channel(params)
+  params[:event][:channel]
+end
+
+def message(params)
+  event = params[:event]
+  type = event[:type]
+
+  return if type != 'message'
+
+  subtype = event[:subtype]
+
+  case subtype
+  when nil
+    event[:text]
+  when 'message_changed'
+    event[:message][:text]
+  end
 end
