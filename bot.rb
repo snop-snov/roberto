@@ -15,12 +15,6 @@ post '/url_verification' do
   data.to_json
 end
 
-post '/url_verification' do
-  data = params.slice(:challenge)
-  content_type :json
-  data.to_json
-end
-
 error JSON::ParserError do
   status 422
   { error: 'Invalid json' }
