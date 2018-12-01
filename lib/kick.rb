@@ -1,7 +1,7 @@
 class Kick
   class << self
     def need_perform?(message)
-      message.include?('пинок')
+      message.include?('пинок') unless message.nil?
     end
 
     def perform(channel, message, users)
