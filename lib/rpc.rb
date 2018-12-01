@@ -10,7 +10,7 @@ class Rpc
       accept_move(message, current_user) if need_accept_move?(message, current_user)
 
       return unless need_check_moves?
-      remove_losers(channel)
+      remove_losers
       send_repeat(channel) if @moves.keys > 1
       if @moves.keys == 1
         send_winner(channel)
@@ -93,11 +93,11 @@ class Rpc
       return rock_users if paper_users.any?
     end
 
-    def remove_losers(channel)
+    def remove_losers
       moves = @moves.map { |u, m| [wrap(u), m].join(': ') }
-      slack.chat_postMessage(channel: channel, as_user: true, text: 'ход: ' + moves.join(', '))
+      slack.chat_postMessage(channel: '#general', as_user: true, text: 'ход: ' + moves.join(', '))
 
-      @moves.delete(*losers)
+      losers.each { |u| @moves.delete(u) }
     end
   end
 end
