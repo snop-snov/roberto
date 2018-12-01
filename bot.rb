@@ -29,7 +29,6 @@ post '/messages' do
     data.to_json
   when 'event_callback'
     Kick.perform channel(data), message(data), users(data)
-    Rpc.perform channel(data), message(data), users(data)
     200
   end
 end

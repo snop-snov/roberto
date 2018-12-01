@@ -14,7 +14,7 @@ class Rpc
       return unless need_check_moves?
 
       remove_losers
-      send_repeat if @moves.keys.count > 1
+      repeat_game if @moves.keys.count > 1
       if @moves.keys.count == 1
         send_winner
         stop_game
@@ -43,10 +43,10 @@ class Rpc
       @moves = users.each_with_object(current_user => nil) { |u, result| result[u] = nil }
     end
 
-    def send_repeat
+    def repeat_game
       users = @moves.keys.map { |u| wrap(u) }
-      @moves = {}
-      slack.chat_postMessage(channel: '#general', as_user: true, text: 'бросить вызов ' + users.join(', '))
+      text = 'повтор ' + users.map { |u| wrap(u) }.join(', ')
+      slack.chat_postMessage(channel: '#general', as_user: true, text: text, attachments: game_buttons)
     end
 
     def send_winner
