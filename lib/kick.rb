@@ -9,12 +9,12 @@ class Kick
       slack.chat_postMessage(channel: channel, as_user: true, text: pendel(users)) if need_perform?(message)
     end
 
-    def kick_ass(channel, users)
-      slack.chat_postMessage(channel: channel, as_user: true, text: pendel(users))
+    def kick_ass(channel, users, current_user)
+      slack.chat_postMessage(channel: channel, as_user: true, text: pendel(users, current_user))
     end
 
-    def pendel(users)
-      'даю пендель ' + users.map { |u| wrap(u) }.join(', ')
+    def pendel(users, current_user)
+      wrap(current_user) + 'отвешивает пендель ' + users.map { |u| wrap(u) }.join(', ')
     end
   end
 end

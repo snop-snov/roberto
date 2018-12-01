@@ -54,9 +54,10 @@ post '/kickass' do
   logger.info(data)
 
   channel = data[:channel_id]
+  current_user = data[:user_id]
   users = data[:text].scan(/<\@(\w{3,})/).flatten
 
-  Kick.kick_ass channel, users
+  Kick.kick_ass channel, users, current_user
 
   200
 end
