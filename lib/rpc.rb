@@ -11,7 +11,7 @@ class Rpc
       return unless need_check_moves?
 
       remove_losers
-      send_repeat if @moves.keys.count > 1
+      # send_repeat if @moves.keys.count > 1
       if @moves.keys.count == 1
         send_winner
         stop_game
