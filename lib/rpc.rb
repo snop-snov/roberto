@@ -39,7 +39,7 @@ class Rpc
     end
 
     def start_game(channel, users)
-      slack.chat_postMessage(channel: channel, as_user: true, text: greeting_players(users))
+      slack.chat_postMessage(channel: channel, as_user: true, text: greeting_players(users), attachments: game_buttons)
       @moves = users.each_with_object({}) { |u, result| result[u] = nil }
       users.each { |u| ask_move(u) }
     end
@@ -79,7 +79,37 @@ class Rpc
     end
 
     def greeting_players(users)
-      "'камень ножницы бумага' начались для " + users.map { |u| wrap(u) }.join(', ')
+      users.map { |u| wrap(u) }.join(', ') + ' сделайте свой выбор!'
+    end
+
+    def game_buttons
+     [
+       {
+          fallback: 'You are unable to choose a game',
+          callback_id: 'rpc_game',
+          color: '#3AA3E3',
+          attachment_type: 'default',
+          actions: [
+            {
+              name: 'game',
+              text: 'Камень',
+              type: 'button',
+              value: 'rock'
+            },
+            {
+              name: 'game',
+              text: 'Ножницы',
+              type: 'button',
+              value: 'scissers'
+            },
+            {
+              name: 'game',
+              text: 'Бумага',
+              type: 'button',
+              value: 'paper'
+            }]
+          }
+        ]
     end
 
     def losers
@@ -92,6 +122,8 @@ class Rpc
       return scissers_users if rock_users.any? && scissers_users.any?
       return paper_users if scissers_users.any? && paper_users.any?
       return rock_users if paper_users.any? && rock_users.any?
+
+      []
     end
 
     def remove_losers

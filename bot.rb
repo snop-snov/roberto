@@ -33,6 +33,14 @@ post '/messages' do
   end
 end
 
+post '/buttons' do
+  content_type :json
+  params = parse_json(request.body.read)
+  logger.info(params_info(params))
+
+  200
+end
+
 error JSON::ParserError do
   status 422
   {error: 'Invalid json'}
