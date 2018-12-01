@@ -11,8 +11,8 @@ class Rpc
 
       return unless need_check_moves?
       remove_losers
-      send_repeat(channel) if @moves.keys > 1
-      if @moves.keys == 1
+      send_repeat(channel) if @moves.keys.count > 1
+      if @moves.keys.count == 1
         send_winner(channel)
         stop_game
       end
