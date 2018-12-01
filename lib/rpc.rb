@@ -51,7 +51,7 @@ class Rpc
 
     def send_winner
       winner = @moves.keys.first
-      slack.chat_postMessage(channel: '#general', as_user: true, text: wrap(winner) + ' ПОБЕДИЛ !!!')
+      slack.chat_postMessage(channel: '#general', as_user: true, text: 'биоорганизм ' + wrap(winner) + ' ПОБЕДИЛ !!!')
     end
 
     def stop_game
@@ -63,14 +63,14 @@ class Rpc
     end
 
     def game_buttons(users)
-      text = users.map { |u| wrap(u) }.join(', ') + ' сделайте свой выбор!'
+      text = users.map { |u| wrap(u) }.join(', ') + ' раз, два, три ...'
       [{
         text: text,
         callback_id: 'rpc_game', color: '#3AA3E3', attachment_type: 'default',
         actions: [
-          {name: 'game', text: 'Камень', type: 'button', value: 'rock'},
-          {name: 'game', text: 'Ножницы', type: 'button', value: 'scissers'},
-          {name: 'game', text: 'Бумага', type: 'button', value: 'paper'}
+          {name: 'game', text: 'Камень :curling_stone:', type: 'button', value: 'rock'},
+          {name: 'game', text: 'Ножницы :scissors:', type: 'button', value: 'scissers'},
+          {name: 'game', text: 'Бумага :scroll:', type: 'button', value: 'paper'}
         ]
       }]
     end
@@ -91,7 +91,7 @@ class Rpc
 
     def remove_losers
       moves = @moves.map { |u, m| [wrap(u), move_emoji(m)].join(': ') }
-      slack.chat_postMessage(channel: '#general', as_user: true, text: 'ход: ' + moves.join(', '))
+      slack.chat_postMessage(channel: '#general', as_user: true, text: moves.join(', '))
 
       losers.each { |u| @moves.delete(u) }
     end
