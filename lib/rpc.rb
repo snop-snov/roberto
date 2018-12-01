@@ -90,10 +90,18 @@ class Rpc
     end
 
     def remove_losers
-      moves = @moves.map { |u, m| [wrap(u), m].join(': ') }
+      moves = @moves.map { |u, m| [wrap(u), move_emoji(m)].join(': ') }
       slack.chat_postMessage(channel: '#general', as_user: true, text: 'ход: ' + moves.join(', '))
 
       losers.each { |u| @moves.delete(u) }
+    end
+
+    def move_emoji(move)
+      case move
+      when :rock then ':curling_stone:'
+      when :scissers then ':scissors:'
+      when :paper then ':scroll:'
+      end
     end
   end
 end
