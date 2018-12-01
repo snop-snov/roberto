@@ -89,9 +89,9 @@ class Rpc
 
       return [] if rock_users.any? && scissers_users.any? && paper_users.any?
 
-      return scissers_users if rock_users.any?
-      return paper_users if scissers_users.any?
-      return rock_users if paper_users.any?
+      return scissers_users if rock_users.any? && scissers_users.any?
+      return paper_users if scissers_users.any? && paper_users.any?
+      return rock_users if paper_users.any? && rock_users.any?
     end
 
     def remove_losers
