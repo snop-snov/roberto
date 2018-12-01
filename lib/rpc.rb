@@ -6,6 +6,10 @@ class Rpc
   class << self
     def perform(channel, message, users)
       start_game(channel, users) if need_start_game?(message)
+    end
+
+    def press_button(press_button_user, action)
+      accept_move(action, press_button_user) if need_accept_move?(press_button_user)
 
       return unless need_check_moves?
 
@@ -15,10 +19,6 @@ class Rpc
         send_winner
         stop_game
       end
-    end
-
-    def press_button(press_button_user, action)
-      accept_move(action, press_button_user) if need_accept_move?(press_button_user)
     end
 
     def need_start_game?(message)
@@ -59,7 +59,7 @@ class Rpc
     end
 
     def accept_move(action, press_button_user)
-      @moves[press_button_user] = action.to_sym
+      @moves[press_button_user] = action
     end
 
     def game_buttons(users)

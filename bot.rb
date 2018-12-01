@@ -35,13 +35,14 @@ end
 
 post '/buttons' do
   content_type :json
-  data = parse_json(params['payload'])
+  # data = parse_json(params['payload'])
+  data = parse_json(request.body.read)
   logger.info(data)
 
   case data[:type]
   when 'interactive_message'
     press_button_user = data[:user][:id]
-    action = data[:actions].first[:value]
+    action = data[:actions].first[:value].to_sym
     Rpc.press_button(press_button_user, action)
   end
 
