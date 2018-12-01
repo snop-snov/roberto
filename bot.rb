@@ -19,29 +19,29 @@ end
 
 post '/messages' do
   content_type :json
-  params = parse_json(request.body.read)
-  logger.info(params_info(params))
+  data = parse_json(request.body.read)
+  logger.info(params_info(data))
 
-  case params[:type]
+  case data[:type]
   when 'url_verification'
-    data = params.slice(:challenge)
+    data = data.slice(:challenge)
     data.to_json
   when 'event_callback'
-    Kick.perform channel(params), message(params), users(params)
-    Rpc.perform channel(params), message(params), users(params)
+    Kick.perform channel(data), message(data), users(data)
+    Rpc.perform channel(data), message(data), users(data)
     200
   end
 end
 
 post '/buttons' do
   content_type :json
-  params = parse_json(params['payload'])
-  logger.info(params)
+  data = parse_json(params['payload'])
+  logger.info(data)
 
-  case params[:type]
+  case data[:type]
   when 'interactive_message'
-    press_button_user = params[:user][:id]
-    action = params[:actions].first[:value]
+    press_button_user = data[:user][:id]
+    action = data[:actions].first[:value]
     Rpc.press_button(press_button_user, action)
   end
 
