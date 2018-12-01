@@ -49,6 +49,16 @@ post '/buttons' do
   200
 end
 
+post '/kickass' do
+  content_type :json
+  data = params
+  logger.info(data)
+
+  Kick.perform channel(data), message(data), users(data)
+
+  200
+end
+
 post '/rpc' do
   content_type :json
   data = params
