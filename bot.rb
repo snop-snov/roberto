@@ -102,8 +102,7 @@ end
 
 def default_respond_to_button(action)
   response_data = {
-    text: 'Accepted',
-    delete_original: true
+    text: 'Accepted'
   }
   uri = URI.parse(action[:response_url])
   http = Net::HTTP.new(uri.host, uri.port)
