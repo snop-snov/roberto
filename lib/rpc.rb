@@ -5,9 +5,13 @@ class Rpc
 
   class << self
     def perform(channel, message, users, current_user)
+      puts @moves
       start_game(channel, users) if need_start_game?(message)
       accept_move(message, current_user) if need_accept_move?(message, current_user)
-      send_result if need_send_result?
+      if need_send_result?
+        send_result
+        @moves = {}
+      end
     end
 
     def need_start_game?(message)
@@ -26,6 +30,8 @@ class Rpc
     def need_send_result?
       return false if @moves.empty?
       return false if @moves.values.any?(&:nil?)
+
+      true
     end
 
     def start_game(channel, users)
