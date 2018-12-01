@@ -44,7 +44,6 @@ post '/buttons' do
     press_button_user = data[:user][:id]
     action = data[:actions].first[:value].to_sym
     Rpc.press_button(press_button_user, action)
-    default_respond_to_button(data)
   end
 
   200
