@@ -12,7 +12,7 @@ Slack.configure do |config|
 end
 
 get '/' do
-  data = { message: 'Hello!' }
+  data = {message: 'Hello!'}
   content_type :json
   data.to_json
 end
@@ -35,7 +35,7 @@ end
 
 error JSON::ParserError do
   status 422
-  { error: 'Invalid json' }
+  {error: 'Invalid json'}
 end
 
 private

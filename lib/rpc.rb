@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rpc
   @moves = {}
 
@@ -17,7 +19,8 @@ class Rpc
       return false if current_user.nil?
       return false if @moves.empty?
       return false unless @moves.keys.include?(current_user)
-      rock?(message) || scissers?(message) || paper?(message)
+
+      move(message) != nil
     end
 
     def need_send_result?
@@ -41,26 +44,17 @@ class Rpc
     end
 
     def accept_move(message, current_user)
-      move =
-        case
-        when rock?(message) then :rock
-        when scissers?(message) then :scissers
-        when paper?(message) then :paper
-        end
-        binding.pry
-      @moves[current_user] = move
+      @moves[current_user] = move(message)
     end
 
-    def rock?(message)
-      message.include?('камень')
-    end
-
-    def scissers?(message)
-      message.include?('ножницы')
-    end
-
-    def paper?(message)
-      message.include?('бумага')
+    def move(message)
+      if message.include?('камень')
+        :rock
+      elsif message.include?('ножницы')
+        :scissers
+      elsif message.include?('бумага')
+        :paper
+      end
     end
 
     def greeting_players(users)
