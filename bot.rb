@@ -42,7 +42,7 @@ post '/buttons' do
   when 'interactive_message'
     press_button_user = data[:user][:id]
     action = data[:actions].first[:value].to_sym
-    Rpc.press_button(press_button_user, action)
+    Rpc.press_button(press_button_user, action, logger)
   end
 
   200

@@ -8,8 +8,8 @@ class Rpc
       start_game(channel, current_user, users) if need_start_game?
     end
 
-    def press_button(press_button_user, action)
-      puts @moves
+    def press_button(press_button_user, action, logger)
+      logger.info @moves.to_s
       accept_move(action, press_button_user) if need_accept_move?(press_button_user)
 
       return unless need_check_moves?
