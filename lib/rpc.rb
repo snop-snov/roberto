@@ -45,7 +45,7 @@ class Rpc
 
     def repeat_game
       users = @moves.keys.map { |u| wrap(u) }
-      text = 'повтор ' + users.map { |u| wrap(u) }.join(', ')
+      text = users.join(', ') + ' Попробуйте ещё раз, кожаные мешки!'
       slack.chat_postMessage(channel: '#general', as_user: true, text: text, attachments: game_buttons)
     end
 
@@ -94,6 +94,7 @@ class Rpc
       slack.chat_postMessage(channel: '#general', as_user: true, text: moves.join("\n"))
 
       losers.each { |u| @moves.delete(u) }
+      @moves.each_with_object({}) { |(user, _), result| result[user] = nil }
     end
 
     def move_emoji(move)
