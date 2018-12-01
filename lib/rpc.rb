@@ -70,7 +70,7 @@ class Rpc
         actions: [
           {name: 'game', text: 'Камень :curling_stone:', type: 'button', value: 'rock'},
           {name: 'game', text: 'Ножницы :scissors:', type: 'button', value: 'scissers'},
-          {name: 'game', text: 'Бумага :scroll:', type: 'button', value: 'paper'}
+          {name: 'game', text: 'Бумага :page_with_curl:', type: 'button', value: 'paper'}
         ]
       }]
     end
@@ -100,7 +100,7 @@ class Rpc
       case move
       when :rock then ':curling_stone:'
       when :scissers then ':scissors:'
-      when :paper then ':scroll:'
+      when :paper then ':page_with_curl:'
       end
     end
   end
