@@ -53,7 +53,10 @@ post '/kickass' do
   data = params
   logger.info(data)
 
-  Kick.perform channel(data), message(data), users(data)
+  channel = data[:channel_id]
+  users = data[:text].scan(/<\@(\w{3,})/).flatten
+
+  Kick.kick_ass channel, users
 
   200
 end
