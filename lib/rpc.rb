@@ -96,8 +96,9 @@ class Rpc
       moves = @moves.map { |u, m| [move_emoji(m), wrap(u)].join(' ') }
       slack.chat_postMessage(channel: '#general', as_user: true, text: moves.join("\n"))
 
-      losers.each { |u| @moves.delete(u) }
-      Kick.kick_from_rpc '#general', losers
+      kick_users = losers
+      kick_users.each { |u| @moves.delete(u) }
+      Kick.kick_from_rpc '#general', kick_users if kick_users.any?
     end
 
     def reset_moves
