@@ -2,6 +2,7 @@
 
 require 'sinatra'
 require 'slack-ruby-client'
+require 'net/http'
 require 'pry'
 
 require './lib/kick.rb'
@@ -43,6 +44,7 @@ post '/buttons' do
     press_button_user = data[:user][:id]
     action = data[:actions].first[:value].to_sym
     Rpc.press_button(press_button_user, action)
+    default_respond_to_button(data)
   end
 
   200
@@ -96,4 +98,18 @@ end
 
 def wrap(user)
   "<@#{user}>"
+end
+
+def default_respond_to_button(action)
+  response_data = {
+    text: 'Accepted',
+    delete_original: true
+  }
+  uri = URI.parse(action[:response_url])
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  headers = {'Content-Type': 'application/json'}
+  request = Net::HTTP::Post.new(uri.request_uri, headers)
+  request.body = response_data.to_json
+  http.request(request)
 end
