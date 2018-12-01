@@ -36,7 +36,7 @@ end
 post '/buttons' do
   content_type :json
   # params = parse_json(request.body.read)
-  # logger.info(params_info(params))
+  logger.info(params)
 
   case params[:type]
   when 'interactive_message'
