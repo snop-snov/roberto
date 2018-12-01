@@ -4,8 +4,8 @@ class Rpc
   @moves = {}
 
   class << self
-    def perform(channel, message, users)
-      start_game(channel, users) if need_start_game?(message)
+    def perform(channel, current_user, users)
+      start_game(channel, current_user, users) if need_start_game?
     end
 
     def press_button(press_button_user, action)
@@ -21,9 +21,8 @@ class Rpc
       end
     end
 
-    def need_start_game?(message)
-      return false if @moves.any?
-      message.include?('бросить вызов')
+    def need_start_game?
+      @moves.empty?
     end
 
     def need_accept_move?(press_button_user)
@@ -38,9 +37,10 @@ class Rpc
       true
     end
 
-    def start_game(channel, users)
-      slack.chat_postMessage(channel: channel, as_user: true, attachments: game_buttons(users))
-      @moves = users.each_with_object({}) { |u, result| result[u] = nil }
+    def start_game(channel, current_user, users)
+      text = "#{wrap(current_user)} бросает вызов организмам " + users.map { |u| wrap(u) }.join(', ')
+      slack.chat_postMessage(channel: channel, as_user: true, text: text, attachments: game_buttons)
+      @moves = users.each_with_object(current_user => nil) { |u, result| result[u] = nil }
     end
 
     def send_repeat
@@ -62,8 +62,8 @@ class Rpc
       @moves[press_button_user] = action
     end
 
-    def game_buttons(users)
-      text = users.map { |u| wrap(u) }.join(', ') + ' раз, два, три ...'
+    def game_buttons
+      text = 'раз, два, три ...'
       [{
         text: text,
         callback_id: 'rpc_game', color: '#3AA3E3', attachment_type: 'default',

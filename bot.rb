@@ -49,6 +49,20 @@ post '/buttons' do
   200
 end
 
+post '/rpc' do
+  content_type :json
+  data = params
+  logger.info(data)
+
+  channel = data[:channel_id]
+  current_user = data[:user_id]
+  users = data[:text].scan(/<\@(\w{3,})/).flatten
+
+  Rpc.perform(channel, current_user, users)
+
+  200
+end
+
 error JSON::ParserError do
   status 422
   {error: 'Invalid json'}
