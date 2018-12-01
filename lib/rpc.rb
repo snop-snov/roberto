@@ -51,7 +51,7 @@ class Rpc
 
     def send_winner
       winner = @moves.keys.first
-      slack.chat_postMessage(channel: '#general', as_user: true, text: 'биоорганизм ' + wrap(winner) + ' ПОБЕДИЛ !!!')
+      slack.chat_postMessage(channel: '#general', as_user: true, text: wrap(winner) + ' ПОБЕДИЛ !!!')
     end
 
     def stop_game
@@ -90,8 +90,8 @@ class Rpc
     end
 
     def remove_losers
-      moves = @moves.map { |u, m| [wrap(u), move_emoji(m)].join(': ') }
-      slack.chat_postMessage(channel: '#general', as_user: true, text: moves.join(', '))
+      moves = @moves.map { |u, m| [move_emoji(m), wrap(u)].join(': ') }
+      slack.chat_postMessage(channel: '#general', as_user: true, text: moves.join('\n'))
 
       losers.each { |u| @moves.delete(u) }
     end
