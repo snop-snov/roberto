@@ -100,7 +100,7 @@ class Rpc
     end
 
     def reset_moves
-      @moves.each_with_object({}) { |(user, _), result| result[user] = nil }
+      @moves = @moves.each_with_object({}) { |(user, _), result| result[user] = nil }
     end
 
     def move_emoji(move)
