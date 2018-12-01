@@ -5,7 +5,6 @@ class Rpc
     def perform(channel, message, users, current_user)
       start_game(channel, users) if need_start_game?(message)
       accept_move(message, current_user) if need_accept_move?(message, current_user)
-      slack.chat_postMessage(channel: '#general', as_user: true, text: @moves.to_s)
     end
 
     def need_start_game?(message)
@@ -38,6 +37,7 @@ class Rpc
         when scissers?(message) then :scissers
         when paper?(message) then :paper
         end
+        # binding.pry
       @moves[user] = move
     end
 
@@ -54,7 +54,7 @@ class Rpc
     end
 
     def greeting_players(users)
-      "'камень ножницы бумага начались для' " + users.map { |u| wrap(u) }.join(', ')
+      "'камень ножницы бумага' начались для " + users.map { |u| wrap(u) }.join(', ')
     end
   end
 end
