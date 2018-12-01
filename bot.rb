@@ -35,7 +35,7 @@ end
 
 post '/buttons' do
   content_type :json
-  # params = parse_json(request.body.read)
+  params = parse_json(params['payload'])
   logger.info(params)
 
   case params[:type]
