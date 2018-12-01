@@ -73,7 +73,10 @@ def message(params)
 end
 
 def users(params)
-  message(params).scan(/<\@([^>]*)>/).flatten
+  massage = message(params)
+  return [] if massage.nil?
+
+  message.scan(/<\@([^>]*)>/).flatten
 end
 
 def wrap(user)
