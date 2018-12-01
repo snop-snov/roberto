@@ -5,7 +5,6 @@ class Rpc
 
   class << self
     def perform(channel, message, users, current_user)
-      puts @moves
       start_game(channel, users) if need_start_game?(message)
       accept_move(message, current_user) if need_accept_move?(message, current_user)
 
@@ -15,8 +14,8 @@ class Rpc
       send_repeat if @moves.keys.count > 1
       if @moves.keys.count == 1
         send_winner
+        stop_game
       end
-      stop_game
     end
 
     def need_start_game?(message)
@@ -57,7 +56,7 @@ class Rpc
 
     def send_winner
       winner = @moves.keys.first
-      slack.chat_postMessage(channel: '#general', as_user: true, text: winner + ' ПОБЕДИЛ !!!')
+      slack.chat_postMessage(channel: '#general', as_user: true, text: wrap(winner) + ' ПОБЕДИЛ !!!')
     end
 
     def stop_game
@@ -98,7 +97,7 @@ class Rpc
       moves = @moves.map { |u, m| [wrap(u), m].join(': ') }
       slack.chat_postMessage(channel: '#general', as_user: true, text: 'ход: ' + moves.join(', '))
 
-      losers.each { |u| @moves.delete!(u) }
+      losers.each { |u| @moves.delete(u) }
     end
   end
 end
