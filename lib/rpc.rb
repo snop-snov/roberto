@@ -9,11 +9,14 @@ class Rpc
     end
 
     def press_button(press_button_user, action)
+      puts @moves
       accept_move(action, press_button_user) if need_accept_move?(press_button_user)
 
       return unless need_check_moves?
 
       remove_losers
+      reset_moves
+
       repeat_game if @moves.keys.count > 1
       if @moves.keys.count == 1
         send_winner
@@ -94,6 +97,9 @@ class Rpc
       slack.chat_postMessage(channel: '#general', as_user: true, text: moves.join("\n"))
 
       losers.each { |u| @moves.delete(u) }
+    end
+
+    def reset_moves
       @moves.each_with_object({}) { |(user, _), result| result[user] = nil }
     end
 
