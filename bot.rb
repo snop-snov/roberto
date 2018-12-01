@@ -28,15 +28,22 @@ post '/messages' do
     data.to_json
   when 'event_callback'
     Kick.perform channel(params), message(params), users(params)
-    Rpc.perform channel(params), message(params), users(params), current_user(params)
+    Rpc.perform channel(params), message(params), users(params)
     200
   end
 end
 
 post '/buttons' do
   content_type :json
-  params = parse_json(request.body.read)
-  logger.info(params_info(params))
+  # params = parse_json(request.body.read)
+  # logger.info(params_info(params))
+
+  case params[:type]
+  when 'interactive_message'
+    press_button_user = params[:user][:id]
+    action = params[:actions].first[:value]
+    Rpc.press_button(press_button_user, action)
+  end
 
   200
 end
@@ -89,9 +96,4 @@ end
 
 def wrap(user)
   "<@#{user}>"
-end
-
-def current_user(params)
-  event = params[:event]
-  event[:user] if event[:channel_type] == 'im'
 end

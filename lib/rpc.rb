@@ -4,9 +4,8 @@ class Rpc
   @moves = {}
 
   class << self
-    def perform(channel, message, users, current_user)
+    def perform(channel, message, users)
       start_game(channel, users) if need_start_game?(message)
-      accept_move(message, current_user) if need_accept_move?(message, current_user)
 
       return unless need_check_moves?
 
@@ -18,17 +17,18 @@ class Rpc
       end
     end
 
+    def press_button(press_button_user, action)
+      accept_move(action, press_button_user) if need_accept_move?(press_button_user)
+    end
+
     def need_start_game?(message)
       return false if @moves.any?
       message.include?('бросить вызов')
     end
 
-    def need_accept_move?(message, current_user)
-      return false if current_user.nil?
+    def need_accept_move?(press_button_user)
       return false if @moves.empty?
-      return false unless @moves.keys.include?(current_user)
-
-      move(message) != nil
+      @moves.keys.include?(press_button_user)
     end
 
     def need_check_moves?
@@ -39,14 +39,8 @@ class Rpc
     end
 
     def start_game(channel, users)
-      slack.chat_postMessage(channel: channel, as_user: true, text: greeting_players(users), attachments: game_buttons)
+      slack.chat_postMessage(channel: channel, as_user: true, attachments: game_buttons(users))
       @moves = users.each_with_object({}) { |u, result| result[u] = nil }
-      users.each { |u| ask_move(u) }
-    end
-
-    def ask_move(user)
-      data = slack.im_open(user: user)
-      slack.chat_postMessage(channel: data['channel']['id'], as_user: true, text: 'ход за тобой, червь: камень ножницы бумага?')
     end
 
     def send_repeat
@@ -64,52 +58,21 @@ class Rpc
       @moves = {}
     end
 
-    def accept_move(message, current_user)
-      @moves[current_user] = move(message)
+    def accept_move(action, press_button_user)
+      @moves[press_button_user] = action.to_sym
     end
 
-    def move(message)
-      if message.include?('камень')
-        :rock
-      elsif message.include?('ножницы')
-        :scissers
-      elsif message.include?('бумага')
-        :paper
-      end
-    end
-
-    def greeting_players(users)
-      users.map { |u| wrap(u) }.join(', ') + ' сделайте свой выбор!'
-    end
-
-    def game_buttons
-     [
-       {
-          fallback: 'You are unable to choose a game',
-          callback_id: 'rpc_game',
-          color: '#3AA3E3',
-          attachment_type: 'default',
-          actions: [
-            {
-              name: 'game',
-              text: 'Камень',
-              type: 'button',
-              value: 'rock'
-            },
-            {
-              name: 'game',
-              text: 'Ножницы',
-              type: 'button',
-              value: 'scissers'
-            },
-            {
-              name: 'game',
-              text: 'Бумага',
-              type: 'button',
-              value: 'paper'
-            }]
-          }
+    def game_buttons(users)
+      text = users.map { |u| wrap(u) }.join(', ') + ' сделайте свой выбор!'
+      [{
+        text: text,
+        callback_id: 'rpc_game', color: '#3AA3E3', attachment_type: 'default',
+        actions: [
+          {name: 'game', text: 'Камень', type: 'button', value: 'rock'},
+          {name: 'game', text: 'Ножницы', type: 'button', value: 'scissers'},
+          {name: 'game', text: 'Бумага', type: 'button', value: 'paper'}
         ]
+      }]
     end
 
     def losers
