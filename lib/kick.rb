@@ -13,8 +13,12 @@ class Kick
       slack.chat_postMessage(channel: channel, as_user: true, text: pendel(users, current_user))
     end
 
+    def kick_from_rpc(channel, users)
+      slack.chat_postMessage(channel: channel, as_user: true, text: 'даю пендель ' + users.map { |u| wrap(u) }.join(', '))
+    end
+
     def pendel(users, current_user)
-      wrap(current_user) + 'отвешивает пендель ' + users.map { |u| wrap(u) }.join(', ')
+      wrap(current_user) + ' отвешивает пендель ' + users.map { |u| wrap(u) }.join(', ')
     end
   end
 end

@@ -97,6 +97,7 @@ class Rpc
       slack.chat_postMessage(channel: '#general', as_user: true, text: moves.join("\n"))
 
       losers.each { |u| @moves.delete(u) }
+      Kick.kick_from_rpc '#general', losers
     end
 
     def reset_moves
