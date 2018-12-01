@@ -30,7 +30,7 @@ class Rpc
       slack.chat_postMessage(channel: data['channel']['id'], as_user: true, text: 'ход за тобой, червь: камень ножницы бумага?')
     end
 
-    def accept_move(user, message)
+    def accept_move(message, current_user)
       move =
         case
         when rock?(message) then :rock
@@ -38,7 +38,7 @@ class Rpc
         when paper?(message) then :paper
         end
         # binding.pry
-      @moves[user] = move
+      @moves[current_user] = move
     end
 
     def rock?(message)
