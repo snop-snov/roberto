@@ -28,7 +28,7 @@ post '/messages' do
     data.to_json
   when 'event_callback'
     Kick.perform channel(params), message(params), users(params)
-    Rpc.perform channel(params), message(params), users(params)
+    Rpc.perform channel(params), message(params), users(params), current_user(params)
     200
   end
 end
@@ -78,4 +78,9 @@ end
 
 def wrap(user)
   "<@#{user}>"
+end
+
+def current_user(params)
+  event = params[:event]
+  event[:user] if event[:channel_type] == 'im'
 end
