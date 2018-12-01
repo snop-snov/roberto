@@ -8,9 +8,13 @@ class Rpc
       puts @moves
       start_game(channel, users) if need_start_game?(message)
       accept_move(message, current_user) if need_accept_move?(message, current_user)
-      if need_send_result?
-        send_result
-        @moves = {}
+
+      return unless need_check_moves?
+      remove_losers
+      send_repeat(channel) if @moves.keys > 1
+      if @moves.keys == 1
+        send_winner(channel)
+        stop_game
       end
     end
 
@@ -27,7 +31,7 @@ class Rpc
       move(message) != nil
     end
 
-    def need_send_result?
+    def need_check_moves?
       return false if @moves.empty?
       return false if @moves.values.any?(&:nil?)
 
@@ -45,8 +49,19 @@ class Rpc
       slack.chat_postMessage(channel: data['channel']['id'], as_user: true, text: 'ход за тобой, червь: камень ножницы бумага?')
     end
 
-    def send_result
-      slack.chat_postMessage(channel: '#general', as_user: true, text: @moves.to_s)
+    def send_repeat(channel)
+      users = @moves.keys.map { |u| wrap(u) }
+      slack.chat_postMessage(channel: channel, as_user: true, text: 'бросить вызов ' + users.join(', '))
+      slack.chat_postMessage(channel: channel, as_user: true, text: 'бросить вызов ' + users.join(', '))
+    end
+
+    def send_winner(channel)
+      winner = @moves.keys.first
+      slack.chat_postMessage(channel: channel, as_user: true, text: winner + ' ПОБЕДИЛ !!!')
+    end
+
+    def stop_game
+      @moves = {}
     end
 
     def accept_move(message, current_user)
@@ -65,6 +80,25 @@ class Rpc
 
     def greeting_players(users)
       "'камень ножницы бумага' начались для " + users.map { |u| wrap(u) }.join(', ')
+    end
+
+    def losers
+      rock_users = @moves.select { |_, move| move == :rock }.keys
+      scissers_users = @moves.select { |_, move| move == :scissers }.keys
+      paper_users = @moves.select { |_, move| move == :paper }.keys
+
+      return [] if rock_users.any? && scissers_users.any? && paper_users.any?
+
+      return scissers_users if rock_users.any?
+      return paper_users if scissers_users.any?
+      return rock_users if paper_users.any?
+    end
+
+    def remove_losers
+      moves = @moves.map { |u, m| [wrap(u), m].join(': ') }
+      slack.chat_postMessage(channel: channel, as_user: true, text: 'ход: ' + moves.join(', '))
+
+      @moves.delete(*losers)
     end
   end
 end
