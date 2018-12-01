@@ -5,6 +5,7 @@ class Rpc
     def perform(channel, message, users, current_user)
       start_game(channel, users) if need_start_game?(message)
       accept_move(message, current_user) if need_accept_move?(message, current_user)
+      send_result if need_send_result?
     end
 
     def need_start_game?(message)
@@ -19,6 +20,11 @@ class Rpc
       rock?(message) || scissers?(message) || paper?(message)
     end
 
+    def need_send_result?
+      return false if @moves.empty?
+      return false if @moves.values.any?(&:nil?)
+    end
+
     def start_game(channel, users)
       slack.chat_postMessage(channel: channel, as_user: true, text: greeting_players(users))
       @moves = users.each_with_object({}) { |u, result| result[u] = nil }
@@ -30,6 +36,10 @@ class Rpc
       slack.chat_postMessage(channel: data['channel']['id'], as_user: true, text: 'ход за тобой, червь: камень ножницы бумага?')
     end
 
+    def send_result
+      slack.chat_postMessage(channel: '#general', as_user: true, text: @moves.to_s)
+    end
+
     def accept_move(message, current_user)
       move =
         case
@@ -37,7 +47,7 @@ class Rpc
         when scissers?(message) then :scissers
         when paper?(message) then :paper
         end
-        # binding.pry
+        binding.pry
       @moves[current_user] = move
     end
 
